@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PyramidChallenge {
   public class SimpleInputParser: IInputParser {
-    public async Task<INode> Parse( Stream input, Encoding encoding = null ) {
+    public async Task<INode> ParseAsync( Stream input, Encoding encoding = null ) {
       if ( input == null ) {
         throw new ArgumentNullException( nameof( input ) );
       }

@@ -1,5 +1,7 @@
-﻿using System.IO;
-using System.Text;
+﻿using System;
+using System.Threading.Tasks;
+using PyramidChallenge.Interfaces;
+using Unity;
 
 namespace PyramidChallenge.Cli {
   class Program {
@@ -26,10 +28,11 @@ namespace PyramidChallenge.Cli {
 223 626 034 683 839 052 627 310 713 999 629 817 410 121
 924 622 911 233 325 139 721 218 253 223 107 233 230 124 233";
 
-    static void Main( string[] args ) {
-      using var sr = new MemoryStream( Encoding.UTF8.GetBytes( Input2 ) );
-      var root = new SimpleInputParser().Parse( sr ).GetAwaiter().GetResult();
-      var paths = new SimplePathFinder().FindPaths( root );
+    static async Task Main( string[] args ) {
+      using var container = Bootstrapper.Initialize();
+      var solver = container.Resolve<IPyramidSolver>();
+      var result = await solver.SolveStringAsync( Input2 );
+      Console.WriteLine( $"Max Path: {string.Join( ',', result.Path )}, Sum: {result.Sum}" );
     }
   }
 }

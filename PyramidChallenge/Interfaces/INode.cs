@@ -1,4 +1,5 @@
-﻿namespace PyramidChallenge {
+﻿// ReSharper disable once CheckNamespace
+namespace PyramidChallenge {
   /// <summary>
   /// Represents a node in the pyramid
   /// </summary>
