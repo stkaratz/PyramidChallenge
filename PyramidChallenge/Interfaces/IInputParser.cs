@@ -5,6 +5,6 @@ using System.Threading.Tasks;
 // ReSharper disable once CheckNamespace
 namespace PyramidChallenge {
   public interface IInputParser {
-    Task<INode> ParseAsync( Stream input, Encoding encoding = null );
+    Task<IParseResult> ParseAsync( Stream input, Encoding encoding = null );
   }
 }

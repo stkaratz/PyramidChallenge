@@ -28,6 +28,9 @@ namespace PyramidChallenge.Cli {
 223 626 034 683 839 052 627 310 713 999 629 817 410 121
 924 622 911 233 325 139 721 218 253 223 107 233 230 124 233";
 
+    //TODO: add command line 
+    //TODO: add logging
+
     static async Task Main( string[] args ) {
       using var container = Bootstrapper.Initialize();
       var solver = container.Resolve<IPyramidSolver>();

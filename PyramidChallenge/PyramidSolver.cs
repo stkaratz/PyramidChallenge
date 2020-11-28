@@ -18,7 +18,11 @@ namespace PyramidChallenge {
 
     public async Task<(IEnumerable<int> Path, int Sum)> SolveAsync( Stream input, Encoding encoding = null ) {
       var root = await _parser.ParseAsync( input, encoding );
-      var paths = await _pathFinder.FindPathsAsync( root );
+      if ( root == null ) {
+        //TODO: make this return IPyramidSolver result
+        return (null, 0);
+      }
+      var paths = await _pathFinder.FindPathsAsync( root.Result );
       var maxPath = await _pathFinder.FindMaxPathAsync( paths );
       return (maxPath.Path.Select( p => p.Value ).ToArray(), maxPath.Sum);
     }

@@ -7,16 +7,19 @@ using System.Threading.Tasks;
 
 namespace PyramidChallenge {
   public class SimpleInputParser: IInputParser {
-    public async Task<INode> ParseAsync( Stream input, Encoding encoding = null ) {
+    public async Task<IParseResult> ParseAsync( Stream input, Encoding encoding = null ) {
       if ( input == null ) {
         throw new ArgumentNullException( nameof( input ) );
       }
 
-      var lines = await GetItemList( input, encoding );
-      var nodes = lines.Select( l => l.Select( n => new Node( n ) ).ToArray() ).ToArray();
+      var res = await GetItemList( input, encoding );
+      if ( !string.IsNullOrEmpty( res.error ) ) {
+        return new ParseResult { Message = res.error };
+      }
+      var nodes = res.result.Select( l => l.Select( n => new Node( n ) ).ToArray() ).ToArray();
       var root = nodes[0][0];
-      for ( int i = 1; i < lines.Length; i++ ) {
-        for ( int j = 0; j < i + 1; j++ ) {
+      for ( var i = 1; i < nodes.Length; i++ ) {
+        for ( var j = 0; j < i + 1; j++ ) {
           var node = nodes[i][j];
           if ( i > j ) {
             nodes[i - 1][j].Left = node;
@@ -27,10 +30,10 @@ namespace PyramidChallenge {
         }
       }
 
-      return root;
+      return new ParseResult { Successful = true, Result = root };
     }
 
-    private async Task<int[][]> GetItemList( Stream stream, Encoding encoding = null ) {
+    private async Task<(string error, int[][] result)> GetItemList( Stream stream, Encoding encoding ) {
       var parsed = new List<int[]>();
       using var sr = new StreamReader( stream, encoding ?? Encoding.UTF8 );
       var i = 0;
@@ -38,18 +41,18 @@ namespace PyramidChallenge {
         var line = await sr.ReadLineAsync();
         var parts = line?.Split( ' ', StringSplitOptions.RemoveEmptyEntries ) ?? Array.Empty<string>();
         if ( parts.Length != ++i ) {
-          throw new Exception( $"Error on line {i}, expected numbers were {i} but were {parts.Length}." );
+          return ($"Error on line {i}, expected numbers were {i} but were {parts.Length}.", null);
         }
         var numbers = parts
           .Select( p => int.TryParse( p, out var num ) ? (int?) num : null )
           .ToList();
         var notParsed = numbers.IndexOf( null );
         if ( notParsed > -1 ) {
-          throw new Exception( $"Error reading number on line {i} position {notParsed}" );
+          return ($"Error reading number on line {i} position {notParsed}.", null);
         }
         parsed.Add( numbers.OfType<int>().ToArray() );
       }
-      return parsed.ToArray();
+      return (string.Empty, parsed.ToArray());
     }
   }
 }
