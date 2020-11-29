@@ -28,6 +28,7 @@ I tried to test each component extensively and separately. You can find all the 
 
 - The numbers are integers
 - If two or more paths have the same sum, I pick the first one
+- Parse error messages, include indexes as zero-based numbers (first will be 0, second 1, etc)
 - I didn't include any logging since it wasn't requested
 
 ### Nuget packages used
