@@ -15,15 +15,18 @@ namespace PyramidChallenge.Test {
       var res = await parser.ParseAsync( StreamHelper.FromFile( inputFile ), encoding );
       Assert.IsEmpty( res.Message );
       Assert.IsTrue( res.Successful );
-      Assert.NotNull( res.Result );
+      Assert.NotNull( res.RootNode );
 
       var fileContent = await File.ReadAllTextAsync( inputFile );
       Assert.IsFalse( string.IsNullOrWhiteSpace( fileContent ) );
 
-      var lines = fileContent.Split( Environment.NewLine );
+      var lines = fileContent
+        .Split( Environment.NewLine )
+        .Where( l => !string.IsNullOrWhiteSpace( l ) )
+        .ToArray();
 
       //keeps track of the current level nodes
-      var currentNodes = new[] { res.Result };
+      var currentNodes = new[] { res.RootNode };
       Assert.AreEqual( int.Parse( lines[0] ), currentNodes[0].Value );
 
       //Going through all the line numbers and asserting to currentNodes
@@ -43,10 +46,16 @@ namespace PyramidChallenge.Test {
           .Concat( new[] { currentNodes.Last().Right } )
           .ToArray();
       }
+    }
 
-      //TODO: tests for invalid inputs (wrong characters), (wrong number of numbers) etc
-
-      //TODO: test for empty lines
+    [Test]
+    [TestCaseSource( typeof( FileTestCases ), nameof( FileTestCases.InvalidFiles ) )]
+    public async Task Invalid( string inputFile, string error ) {
+      var parser = Setup.GetInputParser();
+      var res = await parser.ParseAsync( StreamHelper.FromFile( inputFile ) );
+      Assert.IsFalse( res.Successful );
+      Assert.IsNull( res.RootNode );
+      Assert.AreEqual( error, res.Message );
     }
   }
 }

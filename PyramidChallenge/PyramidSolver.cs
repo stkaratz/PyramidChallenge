@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,15 +15,20 @@ namespace PyramidChallenge {
       _pathFinder = pathFinder ?? throw new ArgumentNullException( nameof( pathFinder ) );
     }
 
-    public async Task<(IEnumerable<int> Path, int Sum)> SolveAsync( Stream input, Encoding encoding = null ) {
-      var root = await _parser.ParseAsync( input, encoding );
-      if ( root == null ) {
-        //TODO: make this return IPyramidSolver result
-        return (null, 0);
+    public async Task<IPyramidSolveResult> SolveAsync( Stream input, Encoding encoding = null ) {
+      var res = await _parser.ParseAsync( input, encoding );
+      if ( !res.Successful ) {
+        return new Result {
+          Message = res.Message
+        };
       }
-      var paths = await _pathFinder.FindPathsAsync( root.Result );
+      var paths = await _pathFinder.FindPathsAsync( res.RootNode );
       var maxPath = await _pathFinder.FindMaxPathAsync( paths );
-      return (maxPath.Path.Select( p => p.Value ).ToArray(), maxPath.Sum);
+      return new Result {
+        Successful = true,
+        Path = maxPath.Path.Select( p => p.Value ).ToArray(),
+        Sum = maxPath.Sum
+      };
     }
   }
 }

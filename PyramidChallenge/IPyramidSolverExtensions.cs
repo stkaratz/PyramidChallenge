@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using PyramidChallenge.Interfaces;
 
 namespace PyramidChallenge {
   public static class IPyramidSolverExtensions {
-    public static async Task<(IEnumerable<int> Path, int Sum)> SolveFileAsync(
+    public static async Task<IPyramidSolveResult> SolveFileAsync(
       this IPyramidSolver solver,
       string filePath,
       Encoding encoding = null ) {
@@ -13,7 +12,7 @@ namespace PyramidChallenge {
       return await solver.SolveAsync( stream, encoding );
     }
 
-    public static async Task<(IEnumerable<int> Path, int Sum)> SolveStringAsync(
+    public static async Task<IPyramidSolveResult> SolveStringAsync(
       this IPyramidSolver solver,
       string value,
       Encoding encoding = null ) {

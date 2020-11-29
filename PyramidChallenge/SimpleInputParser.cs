@@ -30,27 +30,34 @@ namespace PyramidChallenge {
         }
       }
 
-      return new ParseResult { Successful = true, Result = root };
+      return new ParseResult { Successful = true, RootNode = root };
     }
 
     private async Task<(string error, int[][] result)> GetItemList( Stream stream, Encoding encoding ) {
       var parsed = new List<int[]>();
       using var sr = new StreamReader( stream, encoding ?? Encoding.UTF8 );
-      var i = 0;
+      var textLine = 0;
+      var parsedLine = 0;
       while ( !sr.EndOfStream ) {
         var line = await sr.ReadLineAsync();
+        if ( string.IsNullOrWhiteSpace( line ) ) {
+          textLine++;
+          continue;
+        }
         var parts = line?.Split( ' ', StringSplitOptions.RemoveEmptyEntries ) ?? Array.Empty<string>();
-        if ( parts.Length != ++i ) {
-          return ($"Error on line {i}, expected numbers were {i} but were {parts.Length}.", null);
+        if ( parts.Length != parsedLine + 1 ) {
+          return ($"Error on line {textLine}, expected numbers were {parsedLine + 1} but were {parts.Length}.", null);
         }
         var numbers = parts
           .Select( p => int.TryParse( p, out var num ) ? (int?) num : null )
           .ToList();
         var notParsed = numbers.IndexOf( null );
         if ( notParsed > -1 ) {
-          return ($"Error reading number on line {i} position {notParsed}.", null);
+          return ($"Error reading number on line {textLine} position {notParsed}.", null);
         }
         parsed.Add( numbers.OfType<int>().ToArray() );
+        textLine++;
+        parsedLine++;
       }
       return (string.Empty, parsed.ToArray());
     }

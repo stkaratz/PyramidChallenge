@@ -30,6 +30,7 @@ namespace PyramidChallenge.Cli {
 
     //TODO: add command line 
     //TODO: add logging
+    //TODO: make project public and send link
 
     static async Task Main( string[] args ) {
       using var container = Bootstrapper.Initialize();
