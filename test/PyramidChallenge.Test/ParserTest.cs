@@ -57,5 +57,11 @@ namespace PyramidChallenge.Test {
       Assert.IsNull( res.RootNode );
       Assert.AreEqual( error, res.Message );
     }
+
+    [Test]
+    public void NullArgument() {
+      var parser = Setup.GetInputParser();
+      Assert.ThrowsAsync<ArgumentNullException>( () => parser.ParseAsync( null ) );
+    }
   }
 }

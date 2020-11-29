@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PyramidChallenge.Interfaces;
@@ -26,7 +25,7 @@ namespace PyramidChallenge {
       var maxPath = await _pathFinder.FindMaxPathAsync( paths );
       return new Result {
         Successful = true,
-        Path = maxPath.Path.Select( p => p.Value ).ToArray(),
+        Path = maxPath.Path,
         Sum = maxPath.Sum
       };
     }

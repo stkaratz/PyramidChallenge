@@ -3,9 +3,8 @@ using System.Threading.Tasks;
 // ReSharper disable once CheckNamespace
 namespace PyramidChallenge {
   public interface IPathFinder {
-    Task<IEnumerable<IEnumerable<INode>>> FindPathsAsync( INode root );
+    Task<IEnumerable<IEnumerable<int>>> FindPathsAsync( INode root );
 
-    //TODO: this should be moved somewhere else?
-    Task<(IEnumerable<INode> Path, int Sum)> FindMaxPathAsync( IEnumerable<IEnumerable<INode>> paths );
+    Task<(IEnumerable<int> Path, int Sum)> FindMaxPathAsync( IEnumerable<IEnumerable<int>> paths );
   }
 }

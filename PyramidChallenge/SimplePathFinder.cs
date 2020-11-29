@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 
 namespace PyramidChallenge {
   public class SimplePathFinder: IPathFinder {
-    public Task<IEnumerable<IEnumerable<INode>>> FindPathsAsync( INode root ) =>
-      Task.Run<IEnumerable<IEnumerable<INode>>>( () => {
+    public Task<IEnumerable<IEnumerable<int>>> FindPathsAsync( INode root ) =>
+      Task.Run<IEnumerable<IEnumerable<int>>>( () => {
         var queue = new Queue<(IEnumerable<INode> Path, INode Current)>();
         queue.Enqueue( (new List<INode> { root }, root) );
 
@@ -24,17 +24,17 @@ namespace PyramidChallenge {
             paths.Add( path.Path.ToArray() );
           }
         }
-        return paths.ToArray();
+        return paths.Select( p => p.Select( x => x.Value ).ToArray() ).ToArray();
       } );
 
-    public Task<(IEnumerable<INode> Path, int Sum)>
-      FindMaxPathAsync( IEnumerable<IEnumerable<INode>> paths ) =>
-      Task.Run<(IEnumerable<INode> Path, int Sum)>( () => {
+    public Task<(IEnumerable<int> Path, int Sum)>
+      FindMaxPathAsync( IEnumerable<IEnumerable<int>> paths ) =>
+      Task.Run<(IEnumerable<int> Path, int Sum)>( () => {
         var pathList = paths.Select( p => {
           var pArray = p.ToArray();
           return (
             Path: pArray,
-            Sum: pArray.Sum( n => n.Value )
+            Sum: pArray.Sum()
           );
         } ).ToArray();
         var max = pathList.Max( p => p.Sum );
