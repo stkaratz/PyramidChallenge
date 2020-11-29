@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using PyramidChallenge.Cli;
@@ -16,6 +17,14 @@ namespace PyramidChallenge.Test {
     public async Task EmptyFile() {
       var res = await Program.Execute( string.Empty );
       Assert.AreEqual( "Input file was empty.", res );
+    }
+
+    [Test]
+    public async Task ExceptionFileInUse() {
+      await using var lockFile = new FileStream( FileTestCases.SimpleFile, FileMode.Open, FileAccess.ReadWrite );
+      var res = await Program.Execute( FileTestCases.SimpleFile );
+      Assert.AreEqual( $"Error: The process cannot access the file '{Path.GetFullPath( FileTestCases.SimpleFile )}' because it is being used by another process.",
+        res );
     }
 
     [Test]

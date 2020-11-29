@@ -7,16 +7,12 @@ using Unity;
 
 namespace PyramidChallenge.Cli {
   public class Program {
-    //TODO: add command line 
-    //TODO: add logging
-    //TODO: make project public and send link
-
     private static async Task Main( string[] args ) =>
       await new Parser( s => s.HelpWriter = Console.Out )
         .ParseArguments<Options>( args )
-        .WithParsedAsync( async opts => Console.WriteLine( await Execute( opts.Input, opts.Verbose ) ) );
+        .WithParsedAsync( async opts => Console.WriteLine( await Execute( opts.Input ) ) );
 
-    public static async Task<string> Execute( string filePath, bool verbose = false ) {
+    public static async Task<string> Execute( string filePath ) {
       if ( string.IsNullOrWhiteSpace( filePath ) ) {
         return "Input file was empty.";
       }
@@ -36,8 +32,7 @@ namespace PyramidChallenge.Cli {
             $"Max Path:{Environment.NewLine}{string.Join( "->", result.Path )}{Environment.NewLine}Sum: {result.Sum}";
       }
       catch ( Exception ex ) {
-        var message = $"Error: {ex.Message}";
-        return message + ( verbose ? ex.StackTrace : string.Empty );
+        return $"Error: {ex.Message}";
       }
     }
   }
