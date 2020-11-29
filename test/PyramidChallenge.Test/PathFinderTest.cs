@@ -65,7 +65,8 @@ namespace PyramidChallenge.Test {
 
     private static async Task<INode> Parse( string filePath ) {
       var parser = Setup.GetInputParser();
-      var parseResult = await parser.ParseAsync( StreamHelper.FromFile( filePath ) );
+      await using var stream = StreamHelper.FromFile( filePath );
+      var parseResult = await parser.ParseAsync( stream );
       Assert.IsEmpty( parseResult.Message );
       Assert.IsTrue( parseResult.Successful );
       Assert.NotNull( parseResult.RootNode );

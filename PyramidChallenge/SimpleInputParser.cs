@@ -6,7 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace PyramidChallenge {
+  /// <inheritdoc cref="IInputParser"/>
   public class SimpleInputParser: IInputParser {
+    /// <inheritdoc cref="IInputParser.ParseAsync"/>
     public async Task<IParseResult> ParseAsync( Stream input, Encoding encoding = null ) {
       if ( input == null ) {
         throw new ArgumentNullException( nameof( input ) );
@@ -18,6 +20,7 @@ namespace PyramidChallenge {
       }
       var nodes = res.result.Select( l => l.Select( n => new Node( n ) ).ToArray() ).ToArray();
       var root = nodes[0][0];
+      //going through all the nodes and setting left and right
       for ( var i = 1; i < nodes.Length; i++ ) {
         for ( var j = 0; j < i + 1; j++ ) {
           var node = nodes[i][j];
@@ -44,7 +47,7 @@ namespace PyramidChallenge {
           textLine++;
           continue;
         }
-        var parts = line?.Split( ' ', StringSplitOptions.RemoveEmptyEntries ) ?? Array.Empty<string>();
+        var parts = line.Split( ' ', StringSplitOptions.RemoveEmptyEntries );
         if ( parts.Length != parsedLine + 1 ) {
           return ($"Error on line {textLine}, expected numbers were {parsedLine + 1} but were {parts.Length}.", null);
         }

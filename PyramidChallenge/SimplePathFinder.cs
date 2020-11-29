@@ -3,7 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace PyramidChallenge {
+  /// <inheritdoc cref="IPathFinder"/>
   public class SimplePathFinder: IPathFinder {
+    /// <inheritdoc cref="IPathFinder.FindPathsAsync"/>
     public Task<IEnumerable<IEnumerable<int>>> FindPathsAsync( INode root ) =>
       Task.Run<IEnumerable<IEnumerable<int>>>( () => {
         var queue = new Queue<(IEnumerable<INode> Path, INode Current)>();
@@ -27,6 +29,7 @@ namespace PyramidChallenge {
         return paths.Select( p => p.Select( x => x.Value ).ToArray() ).ToArray();
       } );
 
+    /// <inheritdoc cref="IPathFinder.FindMaxPathAsync"/>
     public Task<(IEnumerable<int> Path, int Sum)>
       FindMaxPathAsync( IEnumerable<IEnumerable<int>> paths ) =>
       Task.Run<(IEnumerable<int> Path, int Sum)>( () => {

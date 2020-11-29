@@ -12,7 +12,8 @@ namespace PyramidChallenge.Test {
     [TestCaseSource( typeof( FileTestCases ), nameof( FileTestCases.ValidFiles ) )]
     public async Task Valid( string inputFile, Encoding encoding ) {
       var parser = Setup.GetInputParser();
-      var res = await parser.ParseAsync( StreamHelper.FromFile( inputFile ), encoding );
+      await using var stream = StreamHelper.FromFile( inputFile );
+      var res = await parser.ParseAsync( stream, encoding );
       Assert.IsEmpty( res.Message );
       Assert.IsTrue( res.Successful );
       Assert.NotNull( res.RootNode );
@@ -52,7 +53,8 @@ namespace PyramidChallenge.Test {
     [TestCaseSource( typeof( FileTestCases ), nameof( FileTestCases.InvalidFiles ) )]
     public async Task Invalid( string inputFile, string error ) {
       var parser = Setup.GetInputParser();
-      var res = await parser.ParseAsync( StreamHelper.FromFile( inputFile ) );
+      await using var stream = StreamHelper.FromFile( inputFile );
+      var res = await parser.ParseAsync( stream );
       Assert.IsFalse( res.Successful );
       Assert.IsNull( res.RootNode );
       Assert.AreEqual( error, res.Message );

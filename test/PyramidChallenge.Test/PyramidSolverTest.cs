@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
@@ -24,6 +25,18 @@ namespace PyramidChallenge.Test {
       Assert.IsFalse( res.Successful );
       Assert.IsNull( res.Path );
       Assert.AreEqual( error, res.Message );
+    }
+
+    [Test]
+    [TestCaseSource( typeof( FileTestCases ), nameof( FileTestCases.FileResults ) )]
+    public async Task StringInput( string filePath, int[] result, int sum ) {
+      var solver = Setup.GetPyramidSolver();
+      var input = await File.ReadAllTextAsync( filePath );
+      var res = await solver.SolveStringAsync( input );
+      Assert.IsEmpty( res.Message );
+      Assert.IsTrue( res.Successful );
+      Assert.That( result, Is.EqualTo( res.Path ) );
+      Assert.AreEqual( sum, res.Sum );
     }
 
     [Test]

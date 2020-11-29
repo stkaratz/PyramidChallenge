@@ -3,6 +3,11 @@ using System.Text;
 
 namespace PyramidChallenge {
   public static class StreamHelper {
+    /// <summary>
+    /// Opens a stream 
+    /// </summary>
+    /// <param name="filePath"></param>
+    /// <returns></returns>
     public static Stream FromFile( string filePath ) {
       if ( !File.Exists( filePath ) ) {
         throw new FileNotFoundException( "File could not be found", filePath );
